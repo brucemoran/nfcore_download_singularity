@@ -119,6 +119,8 @@ process Singu_dl {
   else
     if [[ \$(cat ${mains}) != "docker://" ]]; then
       singularity pull \$(cat ${mains})
+    else
+      touch fake.sif
     fi
   fi
   """
