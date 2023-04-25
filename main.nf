@@ -88,6 +88,7 @@ process Singu_parse {
     grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$outname
     if [[ \$(grep "depot.galaxyproject" \${mains} | wc -l) == 0 ]]; then
       echo "docker://"\$(grep 'container \\"' \${mains} | cut -d\\" -f2) > \$outname
+    fi
   done
   """
 }
