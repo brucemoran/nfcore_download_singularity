@@ -78,7 +78,7 @@ process Singu_parse {
   tuple val(pipeline), file(input) from sing_pull
 
   output:
-  file("*.singu") into sing_got.flatten
+  file("*.singu") into sing_got
 
   script:
   spd = "singularity_pull_docker_container"
@@ -95,12 +95,14 @@ process Singu_parse {
 ================================================================================
 */
 
+sing_flat = sing_got.flatten()
+
 process Singu_dl {
 
   publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img]"
 
   input:
-  file(mains) from sing_got
+  file(mains) from sing_flat
 
   output:
   file("*.img") into sing_dls
