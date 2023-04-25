@@ -52,13 +52,13 @@ Channel
 
 process Nfcore_download {
 
-  publishDir "${params.outdir}/${params.pipeline}/${params.revision}", mode: "copy"
+  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/", mode: "copy"
 
   input:
   val(pipeline) from pipe_in
 
   output:
-  tuple val(pipeline), file("output/configs"), file("output/workflow") into sing_pull
+  tuple val(pipeline), file("output/configs/"), file("output/workflow/") into sing_pull
 
   script:
   """
