@@ -84,7 +84,7 @@ process Singu_parse {
   spd = "singularity_pull_docker_container"
   """
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
-    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
+    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > mains.singu
   done
   """
 }
@@ -108,8 +108,8 @@ process Singu_dl {
   script:
   spd = "singularity_pull_docker_container"
   """
-  if [[ \$(grep "depot.galaxyproject" ${mains}.singu | wc -l) > 0 ]]; then
-    wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}.singu) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains}.singu)
+  if [[ \$(grep "depot.galaxyproject" ${mains} | wc -l) > 0 ]]; then
+    wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
   fi
   """
 }
