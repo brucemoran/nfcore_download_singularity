@@ -84,7 +84,10 @@ process Singu_parse {
   spd = "singularity_pull_docker_container"
   """
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
-    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$(echo \${mains} | cut -d\\/ -f 5,6 | sed 's#/#.#g').singu
+    outname=\$(echo \${mains} | cut -d\\/ -f 5,6 | sed 's#/#.#g').singu
+    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$outname
+    if [[ \$(grep "depot.galaxyproject" \${mains} | wc -l) == 0 ]]; then
+      echo "docker://"\$(grep 'container \\"' \${mains} | cut -d\\" -f2) > \$outname
   done
   """
 }
@@ -99,19 +102,21 @@ sing_flat = sing_got.flatten()
 
 process Singu_dl {
 
-  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img]"
+  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img,sif]"
 
   input:
   file(mains) from sing_flat
 
   output:
-  file("*.img") into sing_dls
+  file("*.{img,sif}") into sing_dls
 
   script:
   spd = "singularity_pull_docker_container"
   """
   if [[ \$(grep "depot.galaxyproject" ${mains} | wc -l) > 0 ]]; then
     wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
+  else
+    singularity pull $(cat ${mains})
   fi
   """
 }
