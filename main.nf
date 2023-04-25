@@ -87,7 +87,7 @@ process Singu_parse {
   spd = "singularity_pull_docker_container"
   """
   for mains in \$(find workflow/modules -name main.nf ); do
-    outname=$(echo ${mains} | perl -ane '@s=split(/\\//);
+    outname=\$(echo ${mains} | perl -ane '@s=split(/\\//);
       if(@s == 4){print \$s[-2];}
       if(@s == 5){print \$s[-2];}
       if(@s == 6){print \$s[-3] . "_" . \$s[-2];}' | sed 's#/#.#g').singu
