@@ -92,7 +92,7 @@ process Singu_parse {
       ##naming
       outname="depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img"
       ##getting
-      wget -O \${outname} $(grep "depot.galaxyproject" \${mains}.singu)
+      wget -O \${outname} \$(grep "depot.galaxyproject" \${mains}.singu)
     elif [[ \$(grep "quay" \${mains}.singu | wc -l) > 0 ]]; then
     fi
   done
