@@ -62,7 +62,10 @@ process Nfcore_download {
 
   script:
   """
-  nf-core download ${pipeline} -r ${params.revision} -o ./ -c none
+  nf-core download ${pipeline} -r ${params.revision} -o output -c none
+  mv output/configs configs/
+  mv output/workflow workflow/
+  rm -rf output
   """
 }
 
