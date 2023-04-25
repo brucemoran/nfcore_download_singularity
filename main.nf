@@ -74,23 +74,43 @@ process Nfcore_download {
 
 process Singu_parse {
 
-  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img]"
-
   input:
   tuple val(pipeline), file(input) from sing_pull
 
   output:
-  file("*.img") into sing_got
+  file("*.singu") into sing_got
 
   script:
   spd = "singularity_pull_docker_container"
   """
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
     grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
-    if [[ \$(grep "depot.galaxyproject" \${mains}.singu | wc -l) > 0 ]]; then
-      wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" \${mains}.singu)
-    fi
   done
+  """
+}
+
+/*
+================================================================================
+                          0. Download Singularity
+================================================================================
+*/
+
+process Singu_dl {
+
+  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img]"
+
+  input:
+  file(mains) from sing_got
+
+  output:
+  file("*.img") into sing_dls
+
+  script:
+  spd = "singularity_pull_docker_container"
+  """
+  if [[ \$(grep "depot.galaxyproject" ${mains}.singu | wc -l) > 0 ]]; then
+    wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}.singu) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains}.singu)
+  fi
   """
 }
 
