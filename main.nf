@@ -87,7 +87,7 @@ process Singu_parse {
   """
   ##find all main.nf which have the contianer address
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
-    grep -A2 ${spd} ${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
+    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
     if [[ \$(grep "depot.galaxyproject" \${mains}.singu | wc -l) > 0 ]]; then
       ##naming
       outname="depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img"
