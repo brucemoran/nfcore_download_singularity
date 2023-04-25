@@ -88,9 +88,9 @@ process Singu_parse {
   """
   for mains in \$(find ${workflow}/modules -name main.nf ); do
     outname=\$(echo \${mains} | perl -ane '@s=split(/\\//); if(@s == 4){print \$s[-2];} if(@s == 5){print \$s[-2];} if(@s == 6){print \$s[-3] . "_" . \$s[-2];}' | sed 's#/#.#g').singu
-    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > rpt/\$outname
+    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$outname
     if [[ \$(grep "depot.galaxyproject" \${mains} | wc -l) == 0 ]]; then
-      echo "docker://"\$(grep 'container \\"' \${mains} | cut -d\\" -f2) > rpt/\$outname
+      echo "docker://"\$(grep 'container \\"' \${mains} | cut -d\\" -f2) > \$outname
     fi
   done
   """
