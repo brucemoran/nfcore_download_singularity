@@ -88,8 +88,7 @@ process Singu_parse {
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
     grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
     if [[ \$(grep "depot.galaxyproject" \${mains}.singu | wc -l) > 0 ]]; then
-      wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img"
-      \$(grep "depot.galaxyproject" \${mains}.singu)
+      wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" \${mains}.singu)
     fi
   done
   """
