@@ -58,11 +58,11 @@ process Nfcore_download {
   val(pipeline) from pipe_in
 
   output:
-  tuple val(pipeline), file("output/configs/"), file("output/workflow/") into sing_pull
+  tuple val(pipeline), file("configs"), file("workflow") into sing_pull
 
   script:
   """
-  nf-core download ${pipeline} -r ${params.revision} -o output -c none
+  nf-core download ${pipeline} -r ${params.revision} -o ./ -c none
   """
 }
 
@@ -103,13 +103,13 @@ sing_flat = sing_got.flatten()
 
 process Singu_dl {
 
-  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity/", mode: "copy", pattern: "*.[img,sif]"
+  publishDir "${params.outdir}/${params.pipeline}/${params.revision}/singularity-images/", mode: "copy", pattern: "*.{img,sif}"
 
   input:
   file(mains) from sing_flat
 
   output:
-  file("*.{img,sif}") into sing_dls
+  file("*") into sing_dls
 
   script:
   spd = "singularity_pull_docker_container"
