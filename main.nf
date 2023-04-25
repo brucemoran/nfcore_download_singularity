@@ -84,7 +84,7 @@ process Singu_parse {
   spd = "singularity_pull_docker_container"
   """
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
-    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > mains.singu
+    grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$(basename \${mains}).singu
   done
   """
 }
