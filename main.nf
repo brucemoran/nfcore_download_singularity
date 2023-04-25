@@ -78,7 +78,7 @@ process Singu_parse {
   tuple val(pipeline), file(input) from sing_pull
 
   output:
-  file("*.singu") into sing_got
+  file("*.singu") into sing_got.flatten()
 
   script:
   spd = "singularity_pull_docker_container"
