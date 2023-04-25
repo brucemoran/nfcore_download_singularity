@@ -117,7 +117,9 @@ process Singu_dl {
   if [[ \$(grep "depot.galaxyproject" ${mains} | wc -l) > 0 ]]; then
     wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
   else
-    singularity pull \$(cat ${mains})
+    if [[ \$(cat ${mains}) != "docker://" ]]; then
+      singularity pull \$(cat ${mains})
+    fi
   fi
   """
 }
