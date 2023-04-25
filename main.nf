@@ -58,7 +58,7 @@ process Nfcore_download {
   val(pipeline) from pipe_in
 
   output:
-  tuple val(pipeline), file("output/") into sing_pull
+  tuple val(pipeline), file("output/configs"), file("output/workflow") into sing_pull
 
   script:
   """
@@ -75,7 +75,7 @@ process Nfcore_download {
 process Singu_parse {
 
   input:
-  tuple val(pipeline), file(input) from sing_pull
+  tuple val(pipeline), file(configs), file(workflow) from sing_pull
 
   output:
   file("*.singu") into sing_got
@@ -83,7 +83,7 @@ process Singu_parse {
   script:
   spd = "singularity_pull_docker_container"
   """
-  for mains in \$(find ${input}/workflow/modules -name main.nf ); do
+  for mains in \$(find ${workflow}/modules -name main.nf ); do
     outname=\$(echo \${mains} | cut -d\\/ -f 5,6 | sed 's#/#.#g').singu
     grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \$outname
     if [[ \$(grep "depot.galaxyproject" \${mains} | wc -l) == 0 ]]; then
