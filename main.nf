@@ -85,15 +85,11 @@ process Singu_parse {
   script:
   spd = "singularity_pull_docker_container"
   """
-  ##find all main.nf which have the contianer address
   for mains in \$(find ${input}/workflow/modules -name main.nf ); do
     grep -A2 ${spd} \${mains} | cut -d\\' -f2 | tail -n2 > \${mains}.singu
     if [[ \$(grep "depot.galaxyproject" \${mains}.singu | wc -l) > 0 ]]; then
-      ##naming
-      outname="depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img"
-      ##getting
-      wget -O \${outname} \$(grep "depot.galaxyproject" \${mains}.singu)
-    elif [[ \$(grep "quay" \${mains}.singu | wc -l) > 0 ]]; then
+      wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" \${mains}.singu) | sed 's/\\:/-/')".img"
+      \$(grep "depot.galaxyproject" \${mains}.singu)
     fi
   done
   """
