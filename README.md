@@ -1,21 +1,21 @@
-# `nf-core tools ` Download Singularity
+# `nf-core tools ` Download Singularity Images
 
 ## Overview
-The `nf-core tools download` method was not functional when setting up a new workflow on a HPC that is essentially offline. So this repo allows users to download all `Singularity` images for an `nf-core` pipeline, along with `configs` and `workflow` dirs as per `nf-core tools download`.
+The `nf-core tools download` method was not functional when setting up a new workflow on a HPC that is essentially offline. So this repo allows users to download all `Singularity` images for an `nf-core` pipeline, along with `configs` and `workflow` directories as per `nf-core tools download`.
 
 ## Usage
 1) Run the command:
    ```
-   nextflow run brucemoran/nfcore_download_singularity
-    --outdir <path/to/output>
-    --pipeline <nf-core pipeline name>
-    --revision <version>
+   nextflow run brucemoran/nfcore_download_singularity \
+    --outdir <path/to/output> \
+    --pipeline <nf-core pipeline name> \
+    --revision <version> \
     --email me@oh.my
    ```
 
 2) Output goes to:
    ```
-   <path/to/output>/<nf-core pipeline name>/<version>
+   <path/to/output>/<nf-core pipeline name>/<version>/
    ```
 
 ## About the output
