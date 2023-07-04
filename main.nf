@@ -114,7 +114,7 @@ process Singu_dl {
   file(mains) from sing_flat
 
   output:
-  file("!command.txt") into sing_dls
+  file("*.{sif,img}") into sing_dls
   file("command.txt") into sing_com
 
   script:
