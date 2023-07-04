@@ -126,8 +126,8 @@ process Singu_dl {
   else
     if [[ \$(cat ${mains}) != "docker://" ]]; then
       NAME=\$(cat ${mains} | sed 's#docker://##' | sed 's#[/:;]#-#g')
-      echo "singularity pull --name \$NAME \$(cat ${mains})" > command.txt
-      singularity pull --name \$NAME \$(cat ${mains})
+      echo "singularity pull --name \$NAME \$(cat ${mains}).img" > command.txt
+      singularity pull --name \$NAME \$(cat ${mains})".img"
     else
       touch fake.sif
       touch command.txt
