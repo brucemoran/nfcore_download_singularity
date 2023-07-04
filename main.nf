@@ -3,11 +3,11 @@
 def helpMessage() {
   log.info"""
   -----------------------------------------------------------------------
-                          TUMOUR_ONLY PIPELINE
+  !!!      DOWNLOAD SINGULARITY CONTAINERS FOR NF-CORE PIPELINES      !!!
   -----------------------------------------------------------------------
   Usage:
 
-  nextflow run brucemoran/tumour_only
+  nextflow run brucemoran/nfcore_download_singularity
 
   Mandatory arguments:
 
@@ -16,6 +16,8 @@ def helpMessage() {
     --pipeline      [str]       Name of nf-core pipeline as per `nf-core list`
 
     --revision      [str]       Revision of nf-core pipeline to use
+
+    --nxf_singu_cache      [str]       Path to \$NXF_SINGULARITY_CACHE
 
     --email         [str]       Email address to send reports
     """.stripIndent()
@@ -112,21 +114,46 @@ process Singu_dl {
   file(mains) from sing_flat
 
   output:
-  file("*") into sing_dls
+  file("!command.txt") into sing_dls
+  file("command.txt") into sing_com
 
   script:
   spd = "singularity_pull_docker_container"
   """
   if [[ \$(grep "depot.galaxyproject" ${mains} | wc -l) > 0 ]]; then
+    echo "wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})" > command.txt
     wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
   else
     if [[ \$(cat ${mains}) != "docker://" ]]; then
-      singularity pull \$(cat ${mains})
+      NAME=\$(cat ${mains} | sed 's#docker://##' | sed 's#[/:;]#-#g')
+      echo "singularity pull --name \$NAME \$(cat ${mains})" > command.txt
+      singularity pull --name \$NAME \$(cat ${mains})
     else
       touch fake.sif
+      touch command.txt
     fi
   fi
   """
+}
+
+// 4.19: tar for sending on sendmail
+process zipup {
+
+    label 'low_mem'
+    publishDir "${params.outDir}", mode: 'copy'
+
+    input:
+    file(comms) from sing_com.collect()
+
+    output:
+    file("singularity_commands.txt") into send_com
+
+    script:
+    """
+    for x in \$(ls); do
+      cat \$x
+    done >> singularity_commands.txt
+    """
 }
 
 workflow.onComplete {
@@ -152,8 +179,10 @@ workflow.onComplete {
     exit status : ${workflow.exitStatus}
     """
     .stripIndent()
+  def attachments = send_com.toList().getVal()
 
   sendMail(to: "${params.email}",
            subject: subject,
-           body: msg)
+           body: msg,
+           attach: attachments)
 }
