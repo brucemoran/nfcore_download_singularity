@@ -125,9 +125,9 @@ process Singu_dl {
     wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
   else
     if [[ \$(cat ${mains}) != "docker://" ]]; then
-      NAME=\$(cat ${mains} | sed 's#docker://##' | sed 's#[/:;]#-#g')
-      echo "singularity pull --name \$NAME \$(cat ${mains}).img" > command.txt
-      singularity pull --name \$NAME \$(cat ${mains})".img"
+      NAME=echo \$(cat ${mains} | sed 's#docker://##' | sed 's#[/:;]#-#g')".img"
+      echo "singularity pull --name \$NAME \$(cat ${mains})" > command.txt
+      singularity pull --name \$NAME \$(cat ${mains})
     else
       touch fake.sif
       touch command.txt
