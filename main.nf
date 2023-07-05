@@ -143,10 +143,10 @@ process zipup {
     path comms from sing_com.collect()
 
     output:
-    path "${ofile}" into send_coms
+    path "*.csv" into send_coms
 
     script:
-    def ofile = "nfcore_down_sing.${params.pipeline}_${params.revision}.commands.txt"
+    def ofile = "nfcore_down_sing.${params.pipeline}_${params.revision}.commands.csv"
     """
     cat *.txt | sort | uniq > s.txt
     date > ${ofile}
