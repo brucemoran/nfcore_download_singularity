@@ -137,7 +137,7 @@ process Singu_dl {
 // send out sumamry of commands
 process zipup {
 
-    publishDir "${params.outDir}", mode: 'copy'
+    publishDir "${params.outdir}", mode: 'copy'
 
     input:
     path comms from sing_com.collect()
