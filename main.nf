@@ -146,13 +146,13 @@ process zipup {
     file(comms) from sing_com.collect()
 
     output:
-    file("singularity_commands.txt") into send_com
+    file('singularity_commands.txt') into send_com
 
     script:
     """
     for x in \$(ls); do
       cat \$x
-    done >> singularity_commands.txt
+    done > singularity_commands.txt
     """
 }
 
