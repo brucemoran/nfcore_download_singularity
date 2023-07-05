@@ -151,6 +151,7 @@ process zipup {
     cat *.txt | sort | uniq > s.txt
     date > ${ofile}
     echo ${params.pipeline}_${params.revision} >> ${ofile}
+    echo ${workflow.commandLine} >> ${ofile}
     cat s.txt >> ${ofile}
     """
 }
