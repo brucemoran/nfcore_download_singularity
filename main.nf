@@ -146,13 +146,16 @@ process zipup {
     file(comms) from sing_com.collect()
 
     output:
-    file('singularity_commands.txt') into send_com
+    file("${ofile}") into send_com
 
     script:
+    def ofile = "nxf_pull_sing.${params.pipeline}_${params.revision}.commands.txt"
     """
-    for x in \$(ls); do
-      cat \$x
-    done > singularity_commands.txt
+    cat *.txt) | sort | uniq > s.txt
+    echo \$(date) > ${ofile}
+    echo ${params.pipeline}_${params.revision} >> ${ofile}
+    echo ${params.nxf_singu_cache} >> ${ofile}
+    cat s.txt >> ${ofile}
     """
 }
 
