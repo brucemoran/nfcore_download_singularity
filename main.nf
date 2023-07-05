@@ -134,23 +134,22 @@ process Singu_dl {
   """
 }
 
-// 4.19: tar for sending on sendmail
+// send out sumamry of commands
 process zipup {
 
-    label 'low_mem'
     publishDir "${params.outDir}", mode: 'copy'
 
     input:
-    file(comms) from sing_com.collect()
+    path comms from sing_com.collect()
 
     output:
-    path "${ofile}" into send_com
+    path "${ofile}" into send_coms
 
     script:
     def ofile = "nfcore_down_sing.${params.pipeline}_${params.revision}.commands.txt"
     """
     cat *.txt | sort | uniq > s.txt
-    echo \$(date) > ${ofile}
+    date > ${ofile}
     echo ${params.pipeline}_${params.revision} >> ${ofile}
     cat s.txt >> ${ofile}
     """
@@ -179,7 +178,8 @@ workflow.onComplete {
     exit status : ${workflow.exitStatus}
     """
     .stripIndent()
-  def attachments = send_com.toList().getVal()
+
+  def attachments = send_coms.toList().getVal()
 
   sendMail(to: "${params.email}",
            subject: subject,
