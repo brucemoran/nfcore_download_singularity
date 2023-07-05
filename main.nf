@@ -149,9 +149,9 @@ process zipup {
     file("${ofile}") into send_com
 
     script:
-    def ofile = "nxf_pull_sing.${params.pipeline}_${params.revision}.commands.txt"
+    def ofile = "nfcore_down_sing.${params.pipeline}_${params.revision}.commands.txt"
     """
-    cat *.txt) | sort | uniq > s.txt
+    cat *.txt | sort | uniq > s.txt
     echo \$(date) > ${ofile}
     echo ${params.pipeline}_${params.revision} >> ${ofile}
     echo ${params.nxf_singu_cache} >> ${ofile}
