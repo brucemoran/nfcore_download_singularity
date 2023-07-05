@@ -115,22 +115,22 @@ process Singu_dl {
 
   output:
   file("*.{sif,img}") into sing_dls
-  file("command.txt") into sing_com
+  file("${mains}.txt") into sing_com
 
   script:
   spd = "singularity_pull_docker_container"
   """
   if [[ \$(grep "depot.galaxyproject" ${mains} | wc -l) > 0 ]]; then
-    echo "wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})" > command.txt
+    echo "wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})" > ${mains}.txt
     wget -O "depot.galaxyproject.org-singularity-"\$(basename \$(grep "depot.galaxyproject" ${mains}) | sed 's/\\:/-/')".img" \$(grep "depot.galaxyproject" ${mains})
   else
     if [[ \$(cat ${mains}) != "docker://" ]]; then
       NAME=\$(echo \$(cat ${mains} | sed 's#docker://##' | sed 's#[/:;]#-#g')".img")
-      echo "singularity pull --name \$NAME \$(cat ${mains})" > command.txt
+      echo "singularity pull --name \$NAME \$(cat ${mains})" > ${mains}.txt
       singularity pull --name \$NAME \$(cat ${mains})
     else
       touch fake.sif
-      touch command.txt
+      touch ${mains}.txt
     fi
   fi
   """
