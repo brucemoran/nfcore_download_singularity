@@ -17,8 +17,6 @@ def helpMessage() {
 
     --revision      [str]       Revision of nf-core pipeline to use
 
-    --nxf_singu_cache      [str]       Path to \$NXF_SINGULARITY_CACHE
-
     --email         [str]       Email address to send reports
     """.stripIndent()
 }
@@ -146,7 +144,7 @@ process zipup {
     file(comms) from sing_com.collect()
 
     output:
-    file("${ofile}") into send_com
+    path "${ofile}" into send_com
 
     script:
     def ofile = "nfcore_down_sing.${params.pipeline}_${params.revision}.commands.txt"
@@ -154,7 +152,6 @@ process zipup {
     cat *.txt | sort | uniq > s.txt
     echo \$(date) > ${ofile}
     echo ${params.pipeline}_${params.revision} >> ${ofile}
-    echo ${params.nxf_singu_cache} >> ${ofile}
     cat s.txt >> ${ofile}
     """
 }
